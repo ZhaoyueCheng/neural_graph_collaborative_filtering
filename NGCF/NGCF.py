@@ -280,7 +280,7 @@ class NGCF(object):
         
         # In the first version, we implement the bpr loss via the following codes:
         # We report the performance in our paper using this implementation.
-        maxi = tf.log(tf.nn.sigmoid(pos_scores - neg_scores))
+        maxi = tf.log(tf.clip_by_value(tf.nn.sigmoid(pos_scores - neg_scores),1e-8, 1))
         mf_loss = tf.negative(tf.reduce_mean(maxi))
         
         ## In the second version, we implement the bpr loss via the following codes to avoid 'NAN' loss during training:
