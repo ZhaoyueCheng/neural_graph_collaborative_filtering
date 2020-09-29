@@ -276,12 +276,12 @@ if __name__ == '__main__':
             ret = test(sess, model, users_to_test, drop_flag=True)
             cur_best_pre_0 = ret['recall'][0]
 
-            pretrain_ret = 'pretrained model recall=[%.5f, %.5f], precision=[%.5f, %.5f], hit=[%.5f, %.5f],' \
-                           'ndcg=[%.5f, %.5f], auc=[%.5f]' % \
-                           (ret['recall'][0], ret['recall'][-1],
-                            ret['precision'][0], ret['precision'][-1],
+            pretrain_ret = 'pretrained model recall=[%.5f, %.5f, , %.5f], precision=[%.5f, %.5f, %.5f], hit=[%.5f, %.5f],' \
+                           'ndcg=[%.5f, %.5f, %.5f], auc=[%.5f]' % \
+                           (ret['recall'][0], ret['recall'][1], ret['recall'][-1],
+                            ret['precision'][0], ret['precision'][1], ret['precision'][-1],
                             ret['hit_ratio'][0], ret['hit_ratio'][-1],
-                            ret['ndcg'][0], ret['ndcg'][-1], ret['auc'])
+                            ret['ndcg'][0], ret['ndcg'][1], ret['ndcg'][-1], ret['auc'])
             print(pretrain_ret)
         else:
             sess.run(tf.global_variables_initializer())
@@ -340,11 +340,11 @@ if __name__ == '__main__':
         hit_loger.append(ret['hit_ratio'])
 
         if args.verbose > 0:
-            perf_str = 'Epoch %d [%.1fs + %.1fs]: train==[%.5f=%.5f + %.5f + %.5f], recall=[%.5f, %.5f], ' \
-                       'precision=[%.5f, %.5f], hit=[%.5f, %.5f], ndcg=[%.5f, %.5f], auc=[%.5f]' % \
-                       (epoch, t2 - t1, t3 - t2, loss, mf_loss, emb_loss, reg_loss, ret['recall'][0], ret['recall'][-1],
-                        ret['precision'][0], ret['precision'][-1], ret['hit_ratio'][0], ret['hit_ratio'][-1],
-                        ret['ndcg'][0], ret['ndcg'][-1], ret['auc'])
+            perf_str = 'Epoch %d [%.1fs + %.1fs]: train==[%.5f=%.5f + %.5f + %.5f], recall=[%.5f, %.5f, %.5f], ' \
+                       'precision=[%.5f, %.5f, %.5f], hit=[%.5f, %.5f], ndcg=[%.5f, %.5f, %.5f], auc=[%.5f]' % \
+                       (epoch, t2 - t1, t3 - t2, loss, mf_loss, emb_loss, reg_loss, ret['recall'][0], ret['recall'][1], ret['recall'][-1],
+                        ret['precision'][0], ret['precision'][1], ret['precision'][-1], ret['hit_ratio'][0], ret['hit_ratio'][-1],
+                        ret['ndcg'][0], ret['ndcg'][1], ret['ndcg'][-1], ret['auc'])
             print(perf_str)
 
         cur_best_pre_0, stopping_step, should_stop = early_stopping(ret['recall'][0], cur_best_pre_0,
