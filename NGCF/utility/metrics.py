@@ -70,6 +70,27 @@ def ndcg_at_k(r, k, method=1):
         return 0.
     return dcg_at_k(r, k, method) / dcg_max
 
+def ndcg_at_k_lgcn(test_data, r, k):
+    """
+        Normalized Discounted Cumulative Gain
+        rel_i = 1 or 0, so 2^{rel_i} - 1 = 1 or 0
+        """
+    pred_data = r[:k]
+    length = k if k <= len(test_data) else len(test_data)
+
+    test_matrix = np.zeros((len(pred_data)))
+    test_matrix[:length] = 1
+
+    max_r = test_matrix
+    idcg = np.sum(max_r * 1. / np.log2(np.arange(2, k + 2)))
+    dcg = pred_data * (1. / np.log2(np.arange(2, k + 2)))
+    dcg = np.sum(dcg)
+    if idcg == 0:
+        idcg = 1
+    ndcg = dcg / idcg
+    if np.isnan(ndcg):
+        ndcg = 0
+    return np.sum(ndcg)
 
 def recall_at_k(r, k, all_pos_num):
     r = np.asfarray(r)[:k]
